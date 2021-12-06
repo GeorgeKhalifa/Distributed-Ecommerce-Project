@@ -7,6 +7,9 @@ const session = require('express-session');
 var path = require('path');
 const app = express();
 
+
+app.use(passport.initialize());
+require('./config/passport')(passport);
 // DB Config
 const db = require('./config/keys').mongoURI;
 
@@ -42,15 +45,12 @@ app.use(function (req, res, next) {
   next();
 });
 
-
-// app.use('/', require('./routes/index.js'));
-app.use('/', require('./routes/users.js'));
+app.use('/',require('./routes/users'));
 app.use('/index',require('./routes/index.js'));
 app.use('/cart',require('./routes/cart.js'));
 app.use('/checkout',require('./routes/checkout.js'));
 app.use('/my-account',require('./routes/my-account.js'));
 app.use('/product-list',require('./routes/product-list.js'));
-app.use('/login',require('./routes/login.js'));
 
 
 const PORT = process.env.PORT || 3000;
