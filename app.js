@@ -7,6 +7,8 @@ const session = require('express-session');
 
 const app = express();
 
+require('./config/passport')(passport);
+
 // DB Config
 const db = require('./config/keys').mongoURI;
 
@@ -28,17 +30,20 @@ app.use(
   })
 );
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(flash());
 
 app.use(function(req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
-  //res.locals.error = req.flash('error');
+  res.locals.error = req.flash('error');
   next();
 });
 
 
-app.use('/', require('./routes/index.js'));
+app.use('/index', require('./routes/index.js'));
 app.use('/users', require('./routes/users.js'));
 
 const PORT = process.env.PORT || 3000;
