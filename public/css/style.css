@@ -788,7 +788,7 @@ color:#18CBE9;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 111, 97, .5);
+    /*background: rgba(255, 111, 97, .5);*/
     transition: all .3s;
     font-size: 0;
     z-index: 1;
@@ -952,6 +952,12 @@ color:#18CBE9;
     position: relative;
     width: 100%;
     padding: 30px 0;
+}
+
+.product-view .section-header{
+   padding-bottom: 20px;
+
+   
 }
 
 .product-view .product-view-top {
@@ -1563,47 +1569,6 @@ color:#18CBE9;
     border: none;
 }
 
-.cart-page .coupon {
-    position: relative;
-    width: 100%;
-    margin-bottom: 15px;
-    font-size: 0;
-}
-
-.cart-page .coupon input {
-    width: calc(100% - 135px);
-    height: 40px;
-    padding: 0 15px;
-    font-size: 16px;
-    color: #999999;
-    background: #ffffff;
-    border: 1px solid #dddddd;
-    border-radius: 4px;
-    margin-right: 15px;
-    transition: all .3s;
-}
-
-.cart-page .coupon input:focus {
-    border-color:#18CBE9;
-}
-
-.cart-page .coupon button {
-    width: 120px;
-    height: 40px;
-    padding: 2px 0;
-    font-size: 16px;
-    text-align: center;
-    color:#18CBE9;
-    background: #ffffff;
-    border: 1px solid#18CBE9;
-    border-radius: 4px;
-}
-
-.cart-page .coupon button:hover {
-    color: #ffffff;
-    background:#18CBE9;
-}
-
 .cart-page .cart-summary {
     position: relative;
     width: 100%;
@@ -1634,7 +1599,7 @@ color:#18CBE9;
 
 .cart-page .cart-summary .cart-btn button {
     margin-top: 15px;
-    width: calc(50% - 15px);
+    width: 120px;
     height: 50px;
     padding: 2px 10px;
     text-align: center;
@@ -2227,15 +2192,20 @@ color:#18CBE9;
 }
 
 
+.login {
+    
+  }
 
-.login .login-form{
-  padding: 30px;
-  background: #ffffff;
-  margin-bottom: 100px;
-  border: 2px solid #E7DFDD;
-
-
-}
+  .login form{
+    padding: 30px;
+    
+    margin-top: 20px;
+    margin-bottom: 100px;
+   
+      width:100 px;
+      border: 2px solid #E7DFDD;
+  
+  }
 
 
 /**********************************/
