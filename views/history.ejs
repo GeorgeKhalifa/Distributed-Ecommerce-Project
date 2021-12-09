@@ -1,0 +1,38 @@
+<%- include('partials/my-account-header') %>
+
+            <div class="col-lg-8">
+                <div class="section-header">
+                    <h2>My History</h2>
+                </div>
+                <pre></pre>
+                <div class="row">
+                    <% if (order != null && order != undefined) { %>
+                        <% for(var i=0; i < order.length; i++) { %>
+                            <% for(var j=0; j < order[i].cart.items.length; j++) { %>
+                                <div class="col-md-4">
+                                    <div class="product-item">
+                                        <div class="product-title">
+                                            <a><%= order[i].cart.items[j].title %></a>
+                                        </div>
+                                        <div class="product-image">
+                                            <a href="">
+                                                <img style="width: 300px; height: 300px;" src="<%= order[i].cart.items[j].image%>" alt="Product Image">
+                                            </a>
+                                        </div>
+                                        <div class="product-price">
+                                            <h3><span>$</span><%= order[i].cart.items[j].price %> $</h3>
+                                            <div><a> <%= order[i].createdAt %> </a></div>
+                                            <%- include("./partials/messages"); %>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+                        <% } %>
+                    <% }  %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
