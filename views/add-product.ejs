@@ -1,0 +1,74 @@
+<%- include('partials/my-account-header') %>
+
+            <div class="col-lg-8">
+                <div class="section-header">
+                    <h2>Add Product to your selling list</h2>
+                </div>
+                <pre></pre>
+                <div class="row justify-content-center">
+                    <form action="/add_product" method="POST">
+                        <div class="form-group">
+                            <label for="email">Name</label>
+                            <input
+                            type="name"
+                            id="name"
+                            name="name"
+                            class="form-control"
+                            placeholder="Enter Name"
+                            value="<%= typeof name != 'undefined' ? name : '' %>"
+                        />
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <input
+                            type="name"
+                            id="category"
+                            name="category"
+                            class="form-control"
+                            placeholder="Enter category"
+                            value="<%= typeof category != 'undefined' ? category : '' %>"
+                        />
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <input
+                            type="name"
+                            id="description"
+                            name="description"
+                            class="form-control"
+                            placeholder="Enter description"
+                            value="<%= typeof description != 'undefined' ? description : '' %>"
+                        />
+                        </div>
+                        <div class="form-group">
+                            <label for="password">ImagePath</label>
+                            <input
+                            type="name"
+                            id="image"
+                            name="image"
+                            class="form-control"
+                            placeholder="Enter image"
+                            value="<%= typeof image != 'undefined' ? image : '' %>"
+                        />
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Price</label>
+                            <input
+                            type="name"
+                            id="price"
+                            name="price"
+                            class="form-control"
+                            placeholder="Enter price"
+                            value="<%= typeof price != 'undefined' ? price : '' %>"
+                        />
+                        </div>
+                
+                        <button type="submit" class="btn btn-primary btn-block">Add Product</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
