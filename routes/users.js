@@ -119,7 +119,7 @@ router.post('/login', (req, res, next) => {
     if(!isEqual){
       res.json({wrongPass: true});
     }
-    const token = jwt.sign({email: loadedUser.email, userId: loadedUser._id}, 'secret', {expiresIn: '1h'});
+    const token = jwt.sign({email: loadedUser.email, userId: loadedUser._id,user:loadedUser}, 'secret', {expiresIn: '1h'});
     res.json({token: token, myuser: loadedUser, userId: loadedUser._id});
   })
   .catch(err => console.log(err));

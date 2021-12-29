@@ -8,6 +8,6 @@ module.exports = (req, res, next) => {
     } catch(err) {
         throw err;
     }
-    req.user = decodedToken.myuser;
+    req.user = decodedToken.user;
     next();
 };
