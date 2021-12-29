@@ -312,63 +312,63 @@ var loggedOut = false;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    var url = document.location.href;
-    fetch('http://localhost:3000/users/login',{
-        method: 'GET'
-    })
-    .then(res => {
-        return res.json();
-    })
-    .then(res => {
-        auth = res.authenticated;
-    })
-    .catch(err => console.log(err));
+    // var url = document.location.href;
+    // fetch('http://localhost:3000/users/login',{
+    //     method: 'GET'
+    // })
+    // .then(res => {
+    //     return res.json();
+    // })
+    // .then(res => {
+    //     auth = res.authenticated;
+    // })
+    // .catch(err => console.log(err));
 
-    fetch('http://localhost:3000/users/logout')
-    .then(res => {
-        return res.json();
-    })
-    .then(res => {
-        loggedOut = res.loggedout;
-    })
-    .catch(err => console.log(err));
+    // fetch('http://localhost:3000/users/logout')
+    // .then(res => {
+    //     return res.json();
+    // })
+    // .then(res => {
+    //     loggedOut = res.loggedout;
+    // })
+    // .catch(err => console.log(err));
 
-    if(auth === true){
-        if(window.location.href === 'http://localhost:8080/users/login'){
-            window.location.href = 'http://localhost:8080/error'
-        }
-    }
-    if(auth === false) {
-        if(x === 1){
-            if(window.location.href === 'http://localhost:8080/users/login'){
-                x = 2;
-            }   
-        }
-    }
-    if(loggedOut === true){
-        auth = false;
-        x = 1;
-    }
+    // if(auth === true){
+    //     if(window.location.href === 'http://localhost:8080/users/login'){
+    //         window.location.href = 'http://localhost:8080/error'
+    //     }
+    // }
+    // if(auth === false) {
+    //     if(x === 1){
+    //         if(window.location.href === 'http://localhost:8080/users/login'){
+    //             x = 2;
+    //         }   
+    //     }
+    // }
+    // if(loggedOut === true){
+    //     auth = false;
+    //     x = 1;
+    // }
     
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    $("#loginBtn").click( (e) => {
-        e.preventDefault();
-        fetch('http://localhost:3000/users/login',{
-            method: 'GET'
-        })
-        .then(res => {
-            return res.json();
-        })
-        .then(res => {
-            if(res.authenticated === false){
-                window.location.href = 'http://localhost:8080/users/login';
-            }
-        })
-        .catch(err => console.log(err))
-    });
+    // $("#loginBtn").click( (e) => {
+    //     e.preventDefault();
+    //     fetch('http://localhost:3000/users/login',{
+    //         method: 'GET'
+    //     })
+    //     .then(res => {
+    //         return res.json();
+    //     })
+    //     .then(res => {
+    //         if(res.authenticated === false){
+    //             window.location.href = 'http://localhost:8080/users/login';
+    //         }
+    //     })
+    //     .catch(err => console.log(err))
+    // });
 
     
     //controlling login page
@@ -396,41 +396,47 @@ var loggedOut = false;
             }
         })
         .then(res => {
+            //console.log(res);
             return res.json();
-                // window.location.href = 'http://localhost:8080/users/login';
-                // var er = '<div class="alert alert-danger alert-dismissible fade show" role="alert">Login Operation is unacceptable<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
-                // $('#loginForm').before(er);
-            
+            // window.location.href = 'http://localhost:8080/users/login';
+            // var er = '<div class="alert alert-danger alert-dismissible fade show" role="alert">Login Operation is unacceptable<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+            // $('#loginForm').before(er);
         })
         .then(res => {
+            localStorage.setItem('token', res.token);
+            //console.log(res);
             window.location.href = 'http://localhost:8080/shop';
-            console.log(res);
-            var cookies = getCookies();
-            console.log(cookies);
+            
+            // var cookies = getCookies();
+            // console.log(cookies);
         })
         .catch(err => console.log(err));
     });
 
-
-    // $('.product-view').ready( () => {
-    //     fetch('http://localhost:3000/shop')
-    //     .then(res => {
-    //         console.log(res);
-    //         return res.json();
-    //     })
-    //     .then(res => {
-    //         console.log(res);
-    //         var product;
-    //         for(let i = 0; i < res.products.length; i++){
-    //             product = '<div class="col-md-4"><div class="product-item"><div class="product-title"><a href="#">'+
-    //             res.products[i].name + '</a><div><a href="">' + res.products[i].description + '</a></div></div>' + 
-    //             '<div class="product-image"><a href=""> <img style="width: 300px; height: 300px;" src="'+ res.products[i].image +'" alt="Product Image">' +
-    //             '</a></div><div class="product-price"><h3><span>$</span>' + res.products[i].price +'</h3><a class="btn" ><i class="fa fa-shopping-cart"></i>Add to Cart</a>';
-    //             $('#productsRow').append(product);
-    //         }
-    //     })
-    //     .catch(err => console.log(err));
-    // });
+    $('.product-view').ready( () => {
+        let token = localStorage.getItem('token')
+        fetch('http://localhost:3000/shop', {
+            headers: {
+                Authorization: 'Bearer '+ token
+            }
+        })
+        .then(res => {
+            //console.log(res);
+            return res.json();
+        })
+        .then(res => {
+            console.log(res);
+            var product;
+            for(let i = 0; i < res.products.length; i++){
+                product = '<div class="col-md-4"><div class="product-item"><div class="product-title"><a href="#">'+
+                res.products[i].name + '</a><div><a href="">' + res.products[i].description + '</a></div></div>' + 
+                '<div class="product-image"><a href=""> <img style="width: 300px; height: 300px;" src="'+ res.products[i].image +'" alt="Product Image">' +
+                '</a></div><div class="product-price"><h3><span>$</span>' + res.products[i].price +'</h3><a class="btn" ><i class="fa fa-shopping-cart"></i>Add to Cart</a>';
+                $('#productsRow').append(product);
+            }
+        })
+        .catch(err => console.log(err));
+    });
 
     // $('#myProducts').ready( () => {
     //     fetch('http://localhost:3000/my-account')
