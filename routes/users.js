@@ -2,19 +2,21 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const session = require('express-session');
 // Load User model
 const User = require('../models/User');
 const { forwardAuthenticated } = require('../config/auth');
+const jwt = require('jsonwebtoken');
 // const { body } = require('express-validator/check');
 // const {validationResult} = require('express-validator/check');
 
 
 
 // Login Page
-router.get('/login', forwardAuthenticated, (req, res) => res.json({authenticated: false}));
+//router.get('/login', forwardAuthenticated, (req, res) => res.json({authenticated: false}));
 
 // Register Page
-router.get('/register', forwardAuthenticated, (req, res) => res.json({authenticated: false}));
+//router.get('/register', forwardAuthenticated, (req, res) => res.json({authenticated: false}));
 
 // Register
 router.post('/register', 
@@ -89,16 +91,38 @@ router.post('/register',
 });
 
 // Login
+// router.post('/login', (req, res, next) => {
+//   passport.authenticate('local', {
+//     successRedirect: '/shop',
+//     failureRedirect: '/users/login',
+//     failureFlash: true
+//   });
+//   res.json({ user: req.user});
+//   //res.json({loggedIn: true});
+//   // console.log(locals.pass);
+//   // res.json({message: locals.pass});
+// });
+
 router.post('/login', (req, res, next) => {
-  passport.authenticate('local', {
-    successRedirect: '/shop',
-    failureRedirect: '/users/login',
-    failureFlash: true
-  });
-  res.json({ user: req.user});
-  //res.json({loggedIn: true});
-  // console.log(locals.pass);
-  // res.json({message: locals.pass});
+  const {email, password} = req.body;
+  let loadedUser;
+  //check if email exist in database
+  User.findOne({ email: email })
+  .then(user => {
+    if(!user){
+      res.json({emailExisting: false});
+    }
+    loadedUser = user;
+    return bcrypt.compare(password, user.password);
+  })
+  .then(isEqual => {
+    if(!isEqual){
+      res.json({wrongPass: true});
+    }
+    const token = jwt.sign({email: loadedUser.email, userId: loadedUser._id}, 'secret', {expiresIn: '1h'});
+    res.json({token: token, myuser: loadedUser, userId: loadedUser._id});
+  })
+  .catch(err => console.log(err));
 });
 
 // Logout

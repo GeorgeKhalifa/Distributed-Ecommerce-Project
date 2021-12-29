@@ -8,6 +8,7 @@ const Order = require("./models/Order")
 const ObjectId = mongodb.ObjectId;
 const { ensureAuthenticated, forwardAuthenticated } = require('./config/auth');
 const { render } = require('ejs');
+const isAuth = require('./middleware/is-auth');
 
 
 db = require('./config/keys').mongoURI;
@@ -39,7 +40,7 @@ router.post('/add_product', (req, res) => {
 }
 );
 
-router.get('/shop', ensureAuthenticated, (req, res) => {
+router.get('/shop', isAuth, (req, res) => {
   Product.find({ user: { $ne: new Object(req.user) } }).then((products) => { 
     res.json({user: req.user,
       products: products
