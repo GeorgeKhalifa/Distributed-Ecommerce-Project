@@ -406,37 +406,56 @@ var loggedOut = false;
             localStorage.setItem('token', res.token);
             //console.log(res);
             window.location.href = 'http://localhost:8080/shop';
-            
+            fetch('http://localhost:3000/shop', {
+            headers: {
+                Authorization: 'Bearer '+ res.token
+            }
+            })
+            .then(res => {
+                //console.log(res);
+                return res.json();
+            })
+            .then(res => {
+                console.log(res);
+                var product;
+                for(let i = 0; i < res.products.length; i++){
+                    product = '<div class="col-md-4"><div class="product-item"><div class="product-title"><a href="#">'+
+                    res.products[i].name + '</a><div><a href="">' + res.products[i].description + '</a></div></div>' + 
+                    '<div class="product-image"><a href=""> <img style="width: 300px; height: 300px;" src="'+ res.products[i].image +'" alt="Product Image">' +
+                    '</a></div><div class="product-price"><h3><span>$</span>' + res.products[i].price +'</h3><a class="btn" ><i class="fa fa-shopping-cart"></i>Add to Cart</a>';
+                    $('#productsRow').append(product);
+                }
+            })
             // var cookies = getCookies();
             // console.log(cookies);
         })
         .catch(err => console.log(err));
     });
 
-    $('.product-view').ready( () => {
-        let token = localStorage.getItem('token')
-        fetch('http://localhost:3000/shop', {
-            headers: {
-                Authorization: 'Bearer '+ token
-            }
-        })
-        .then(res => {
-            //console.log(res);
-            return res.json();
-        })
-        .then(res => {
-            console.log(res);
-            var product;
-            for(let i = 0; i < res.products.length; i++){
-                product = '<div class="col-md-4"><div class="product-item"><div class="product-title"><a href="#">'+
-                res.products[i].name + '</a><div><a href="">' + res.products[i].description + '</a></div></div>' + 
-                '<div class="product-image"><a href=""> <img style="width: 300px; height: 300px;" src="'+ res.products[i].image +'" alt="Product Image">' +
-                '</a></div><div class="product-price"><h3><span>$</span>' + res.products[i].price +'</h3><a class="btn" ><i class="fa fa-shopping-cart"></i>Add to Cart</a>';
-                $('#productsRow').append(product);
-            }
-        })
-        .catch(err => console.log(err));
-    });
+    // $('.product-view').ready( () => {
+    //     let token = localStorage.getItem('token')
+    //     fetch('http://localhost:3000/shop', {
+    //         headers: {
+    //             Authorization: 'Bearer '+ token
+    //         }
+    //     })
+    //     .then(res => {
+    //         //console.log(res);
+    //         return res.json();
+    //     })
+    //     .then(res => {
+    //         console.log(res);
+    //         var product;
+    //         for(let i = 0; i < res.products.length; i++){
+    //             product = '<div class="col-md-4"><div class="product-item"><div class="product-title"><a href="#">'+
+    //             res.products[i].name + '</a><div><a href="">' + res.products[i].description + '</a></div></div>' + 
+    //             '<div class="product-image"><a href=""> <img style="width: 300px; height: 300px;" src="'+ res.products[i].image +'" alt="Product Image">' +
+    //             '</a></div><div class="product-price"><h3><span>$</span>' + res.products[i].price +'</h3><a class="btn" ><i class="fa fa-shopping-cart"></i>Add to Cart</a>';
+    //             $('#productsRow').append(product);
+    //         }
+    //     })
+    //     .catch(err => console.log(err));
+    // });
 
     // $('#myProducts').ready( () => {
     //     fetch('http://localhost:3000/my-account')
