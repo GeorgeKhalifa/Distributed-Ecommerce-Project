@@ -405,7 +405,7 @@ var loggedOut = false;
         .then(res => {
             localStorage.setItem('token', res.token);
             //console.log(res);
-            window.location.href = 'http://localhost:8080/shop';
+            //window.location.href = 'http://localhost:8080/shop';
             fetch('http://localhost:3000/shop', {
             headers: {
                 Authorization: 'Bearer '+ res.token
@@ -418,6 +418,7 @@ var loggedOut = false;
             .then(res => {
                 console.log(res);
                 var product;
+              //  window.location.href = 'http://localhost:8080/shop';
                 for(let i = 0; i < res.products.length; i++){
                     product = '<div class="col-md-4"><div class="product-item"><div class="product-title"><a href="#">'+
                     res.products[i].name + '</a><div><a href="">' + res.products[i].description + '</a></div></div>' + 
