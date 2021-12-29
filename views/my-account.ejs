@@ -1,0 +1,53 @@
+<%- include('partials/my-account-header') %>
+        
+                    <div class="col-lg-8">
+                        <div class="section-header">
+                            <h2>My Products</h2>
+                        </div>
+                        <div class="section-header">
+                            <h3>Your Cash amount: <%= user.cash %> </h3>
+                        </div>
+                        <pre></pre>
+                        <div class="row">
+                            <% if (products.length > 0 ) { %>
+                                <% for(var i=0; i < products.length; i++) { %>
+                                    <div class="col-md-4">
+                                        <div class="product-item">
+                                            <div class="product-title">
+                                                <a href="#"><%= products[i].name %></a>
+                                                <div><a href=""><%= products[i].description %></a></div>
+                                            </div>
+                                            <div class="product-image">
+                                                <a href="">
+                                                    <img style="width: 300px; height: 300px;" src="<%= products[i].image%>" alt="Product Image">
+                                                </a>
+                                            </div>
+                                            <div class="product-price">
+                                                <h3><span>$</span><%= products[i].price %></h3>
+                                                <%- include("./partials/messages"); %>
+                                                <a class="btn" href="/remove_item/<%= products[i]._id%> "><i class="fa fa-shopping-cart"></i>Remove</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            <% } else { %>
+                                <div class="product-image">
+                                    <a> you dan't have any products yet, please add some.</a>
+                                </div>
+                                <pre></pre>
+                                <pre></pre>
+                                <pre></pre>
+                                <pre></pre>
+                                <pre></pre>
+                                <pre></pre>
+                                <pre></pre>
+                                <pre></pre>
+                                <pre></pre>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<%- include('partials/footer') %>
