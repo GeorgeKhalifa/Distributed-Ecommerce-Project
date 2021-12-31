@@ -8,6 +8,7 @@ const Order = require("./models/Order")
 const ObjectId = mongodb.ObjectId;
 const { ensureAuthenticated, forwardAuthenticated } = require('./config/auth');
 const { render } = require('ejs');
+const jwt = require('jsonwebtoken');
 const isAuth = require('./middleware/is-auth');
 
 
@@ -16,12 +17,11 @@ db = require('./config/keys').mongoURI;
 // Welcome Page
 //router.get('/', forwardAuthenticated, (req, res) => res.render('welcome'));
 
-router.get('/my-account', ensureAuthenticated, (req, res) => {
-  Product.find({ user: new Object(req.user) }).then((products) => { 
-    res.json({user: req.user, products});
+router.get('/my-account', isAuth, (req, res) => {
+  Product.find({ user: new ObjectId(req.user.id) }).then((products) => { 
+    res.json({user: req.user, products: products});
     //res.render('my-account', { user: req.user, products }) 
   })
-
 });
 
 router.get('/add_product', ensureAuthenticated, (req, res) =>
@@ -30,13 +30,15 @@ router.get('/add_product', ensureAuthenticated, (req, res) =>
   }
   ));
 
-router.post('/add_product', (req, res) => {
+router.post('/add_product', isAuth, (req, res) => {
   console.log("HERE ACCEPTED!");
-  var user = req.user.id;
+  var user = req.user._id;
   const { name, category, description, image, price } = req.body;
   const product = new Product({ user, name, category, description, image, price });
   product.save().then(() => console.log('SUCCESS')).catch(() => console.log('Failure as always'));
-  res.redirect('/my-account');
+  const token = jwt.sign({email: req.user.email, userId: req.user._id, user:req.user}, 'secret', {expiresIn: '1h'});
+  res.json({token: token});
+  //res.redirect('/my-account');
 }
 );
 
@@ -58,7 +60,7 @@ router.get('/remove_item/:id', ensureAuthenticated, (req, res) => {
 
 
 // GET: add a product to the shopping cart when "Add to cart" button is pressed
-router.get("/add_to_cart/:id", ensureAuthenticated, async (req, res) => {
+router.get("/add_to_cart/:id", isAuth, async (req, res) => {
   const productId = req.params.id;
   try {
     // get the correct cart, either from the db, session, or an empty cart.
@@ -103,16 +105,16 @@ router.get("/add_to_cart/:id", ensureAuthenticated, async (req, res) => {
     }
     req.session.cart = cart;
     console.log("success", "Item added to the shopping cart");
-    res.redirect(req.headers.referer);
+    res.json({added: true});
   } catch (err) {
     console.log(err.message);
-    res.redirect("/my-account");
+    res.json({added: false});
   }
 });
 
 
 // GET: view shopping cart contents
-router.get("/cart", ensureAuthenticated, async (req, res) => {
+router.get("/cart", isAuth, async (req, res) => {
   try {
     // find the cart, whether in session or in db based on the user state
     let cart_user;
@@ -121,40 +123,42 @@ router.get("/cart", ensureAuthenticated, async (req, res) => {
     }
     // if user is signed in and has cart, load user's cart from the db
     if (req.user && cart_user) {
-      req.session.cart = cart_user;
-      return res.render("cart", {
-        cart: cart_user,
-        //
-        products: await cart_user.items,
-        //
-        subTotal: '0',
-      });
+      //req.session.cart = cart_user;
+      // return res.render("cart", {
+      //   cart: cart_user,
+      //   //
+      //   products: await cart_user.items,
+      //   //
+      //   subTotal: '0',
+      // });
+      res.json({cart: cart_user, products: await cart_user.items});
     }
     // if there is no cart in session and user is not logged in, cart is empty
-    if (!req.session.cart) {
-      return res.render("cart", {
-        cart: null,
-        products: null,
-        subTotal: '0',
-      });
-    }
+    // if (!req.session.cart) {
+    //   return res.render("cart", {
+    //     cart: null,
+    //     products: null,
+    //     subTotal: '0',
+    //   });
+    // }
     // otherwise, load the session's cart
-    return res.render("cart", {
-      //
-      cart:cart_user,
-      //
-      //
-      products: await  cart_user.items,
-      //
-      subTotal: '0',
-    });
+    // return res.render("cart", {
+    //   //
+    //   cart:cart_user,
+    //   //
+    //   //
+    //   products: await  cart_user.items,
+    //   //
+    //   subTotal: '0',
+    // });
+    res.json({cart: cart_user, products: await cart_user.items});
   } catch (err) {
     console.log(err.message);
     //
-    res.render("cart",{
-      cart:null,
-      products:null
-    });
+    // res.render("cart",{
+    //   cart:null,
+    //   products:null
+    // });
     //
   }
 });
@@ -171,7 +175,10 @@ router.post('/deposit_cash', ensureAuthenticated, (req, res) => {
   // let user = User.find({ _id: req.user.id });
   let cashValue = Number(req.user.cash) + Number(req.body.cash);
 
-  User.updateOne({ _id: req.user.id }, { $set: { cash: cashValue } }).then(() => { res.redirect('/my-account') })
+  User.updateOne({ _id: req.user.id }, { $set: { cash: cashValue } }).then(() => { 
+    const token = jwt.sign({email: req.user.email, userId: req.user._id, user:req.user}, 'secret', {expiresIn: '1h'});
+    res.json({token: token});
+  });
 });
 
 
