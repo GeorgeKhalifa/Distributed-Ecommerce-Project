@@ -12,6 +12,7 @@ const shopRouter = require('./routes/product-list');
 const historyRoute = require('./routes/history');
 const addProductRoute = require('./routes/add-product');
 const depositeCashRoute = require('./routes/deposite-cash');
+const cart = require('./routes/cart');
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/public", express.static('./public/'));
@@ -24,6 +25,7 @@ app.use(shopRouter);
 app.use(historyRoute);
 app.use(addProductRoute);
 app.use(depositeCashRoute);
+app.use(cart);
 
 
 app.listen(8080);

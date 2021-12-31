@@ -1,6 +1,3 @@
-var auth = false
-var x = 1;
-var loggedOut = false;
 (function ($) {
     "use strict";
 
@@ -416,73 +413,190 @@ var loggedOut = false;
                 return res.json();
             })
             .then(res => {
-                console.log(res);
-                var product;
+                //console.log(res);
+                var product ="";
+                //localStorage.setItem('products', res.products);
               //  window.location.href = 'http://localhost:8080/shop';
                 for(let i = 0; i < res.products.length; i++){
-                    product = '<div class="col-md-4"><div class="product-item"><div class="product-title"><a href="#">'+
+                    product += '<div class="col-md-4"><div class="product-item"><div class="product-title"><a href="#">'+
                     res.products[i].name + '</a><div><a href="">' + res.products[i].description + '</a></div></div>' + 
                     '<div class="product-image"><a href=""> <img style="width: 300px; height: 300px;" src="'+ res.products[i].image +'" alt="Product Image">' +
-                    '</a></div><div class="product-price"><h3><span>$</span>' + res.products[i].price +'</h3><a class="btn" ><i class="fa fa-shopping-cart"></i>Add to Cart</a>';
-                    $('#productsRow').append(product);
+                    '</a></div><div class="product-price"><h3><span>$</span>' + res.products[i].price +'</h3><a id="addToCart" href="/add_to_cart/' + res.products[i]._id +'"class="btn" ><i class="fa fa-shopping-cart"></i>Add to Cart</a></div></div></div>';
+                    //$('#productsRow').append(product);
                 }
+                localStorage.setItem('products', product);
+                //window.location.href = 'http://localhost:8080/shop?products=' + product;
+                window.location.href = 'http://localhost:8080/shop';
             })
+            .catch(err => console.log(err));
             // var cookies = getCookies();
             // console.log(cookies);
         })
         .catch(err => console.log(err));
     });
+    let prod = localStorage.getItem('products');
+    $('#productsRow').append(prod);
 
-    // $('.product-view').ready( () => {
-    //     let token = localStorage.getItem('token')
-    //     fetch('http://localhost:3000/shop', {
-    //         headers: {
-    //             Authorization: 'Bearer '+ token
-    //         }
-    //     })
-    //     .then(res => {
-    //         //console.log(res);
-    //         return res.json();
-    //     })
-    //     .then(res => {
-    //         console.log(res);
-    //         var product;
-    //         for(let i = 0; i < res.products.length; i++){
-    //             product = '<div class="col-md-4"><div class="product-item"><div class="product-title"><a href="#">'+
-    //             res.products[i].name + '</a><div><a href="">' + res.products[i].description + '</a></div></div>' + 
-    //             '<div class="product-image"><a href=""> <img style="width: 300px; height: 300px;" src="'+ res.products[i].image +'" alt="Product Image">' +
-    //             '</a></div><div class="product-price"><h3><span>$</span>' + res.products[i].price +'</h3><a class="btn" ><i class="fa fa-shopping-cart"></i>Add to Cart</a>';
-    //             $('#productsRow').append(product);
-    //         }
-    //     })
-    //     .catch(err => console.log(err));
-    // });
+    if (window.location.href.indexOf("add_to_cart") != -1){
+        var url = window.location.href;
+        var id = url.split('/');
+        var token = localStorage.getItem('token');
+        fetch('http://localhost:3000/add_to_cart/'+id[4], {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        .then(res => {
+            return res.json();
+        })
+        .then(res => {
+            if(res.added){
+                fetch('http://localhost:3000/shop', {
+                    headers: {
+                        Authorization: 'Bearer '+ token
+                    }
+                })
+                .then(res => {
+                    //console.log(res);
+                    return res.json();
+                })
+                .then(res => {
+                    //console.log(res);
+                    var product ="";
+                    //localStorage.setItem('products', res.products);
+                //  window.location.href = 'http://localhost:8080/shop';
+                    for(let i = 0; i < res.products.length; i++){
+                        product += '<div class="col-md-4"><div class="product-item"><div class="product-title"><a href="#">'+
+                        res.products[i].name + '</a><div><a href="">' + res.products[i].description + '</a></div></div>' + 
+                        '<div class="product-image"><a href=""> <img style="width: 300px; height: 300px;" src="'+ res.products[i].image +'" alt="Product Image">' +
+                        '</a></div><div class="product-price"><h3><span>$</span>' + res.products[i].price +'</h3><a id="addToCart" href="/add_to_cart/' + res.products[i]._id +'"class="btn" ><i class="fa fa-shopping-cart"></i>Add to Cart</a></div></div></div>';
+                        //$('#productsRow').append(product);
+                    }
+                    localStorage.setItem('products', product);
+                    //window.location.href = 'http://localhost:8080/shop?products=' + product;
+                    window.location.href = 'http://localhost:8080/shop';
+                })
+                .catch(err => console.log(err));
+            }
+        })
+        .catch(err => console.log(err));
+    }
 
-    // $('#myProducts').ready( () => {
-    //     fetch('http://localhost:3000/my-account')
-    //     .then(res => {
-    //         return res.json();
-    //     })
-    //     .then(res => {
-    //         var cash = '<h3>Your Cash amount: ' + res.user.cash + '</h3>';
-    //         $('.section-header').append(cash);
 
-    //         if(res.products.length > 0){
-    //             for( let i = 0; i < res.products.length; i++){
-    //                 var prod = '<div class="col-md-4"><div class="product-item"><div class="product-title"><a href="#">' + res.products[i].name + '</a><div><a href="">' + res.products[i].description + 
-    //                 '</a></div></div><div class="product-image"><a href=""><img style="width: 300px; height: 300px;" src="' + res.products[i].image + '" alt="Product Image"></a></div><div class="product-price">' +
-    //                 '<h3><span>$</span>' + res.products[i].price + '</h3><a class="btn" href="/remove_item/' + res.products[i]._id + ' "><i class="fa fa-shopping-cart"></i>Remove</a></div></div></div>';
-    //                 $('.row').append(prod);
-    //             }
-    //         }
-    //         else {
-    //             var empty = '[{<div class="product-image"><a> you ' + "don't have any products yet, please add some.</a></div><pre></pre><pre></pre><pre></pre><pre></pre><pre></pre><pre></pre><pre></pre><pre></pre><pre></pre>}]"
-    //             $('.row').append(empty);
-    //         }
-    //     })
-    //     .catch(err => console.log(err));
-    // });
+    if(window.location.href.indexOf("/cart")!= -1){
+        var token = localStorage.getItem('token');
+        fetch('http://localhost:3000/cart', {
+            headers: {
+                Authorization: 'Bearer '+ token
+            }
+        })
+        .then(res => {
+            return res.json();
+        })
+        .then(res => {
+            console.log(res.products);  
+            let products;
+            if(res.products != null){
+                products = '<div class="table-responsive"><table class="table table-bordered"><thead class="thead-dark"><tr><th>Product</th><th>Name</th><th>Price</th></tr></thead><tbody>';
+                for (let i = 0; i < res.products.length; i++){
+                    products += '<tr><td><div class="img"><a href="#"><img src="'+ res.products[i].image +'" alt="Image"></a>' + 
+                    '</div></td><td>' + res.products[i].title + '</td><td>$' + res.products[i].price +'</td></tr>';
+                }
+                products += '</tbody></table></div>';
+            }
+            else {
+                products = '<h1>Ops you have nothing</h1><div class="product-image"><a href=""><img src="img/poor.jpg" alt="Product Image"></a></div>'
+            }
+            $('.tab-content').append(products)
+        })
+        .catch(err => console.log(err));
+    }
 
+
+    $('#addProduct').submit( () => {
+        const name = $('#name').val();
+        const category = $('#category').val();
+        const description = $('#description').val();
+        const image = $('#image').val();
+        const price = $('#price').val();
+        var token = localStorage.getItem('token');
+        fetch('http://localhost:3000/add_product', {
+            method: "POST",
+            body: JSON.stringify({
+                name: name,
+                category: category,
+                description: description,
+                image: image,
+                price: price
+            }),
+            headers: {
+                Authorization: 'Bearer '+ token,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => {
+            return res.json();
+        })
+        .then(res => {
+            localStorage.setItem('token', res.token);
+            window.location.href = 'http://localhost:8080/my-account';
+        })
+        .catch(err => console.log(err));
+    });
+
+    $('#depositeCash').submit((e) => {
+        e.preventDefault();
+        const cash = $('#cash').val();
+        fetch('http://localhost:3000/deposit_cash', {
+            method: 'POST',
+            body: JSON.stringify({
+                cash:cash
+            }),
+            headers: {
+                Authorization: 'Bearer '+ token,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => {
+            return res.json();
+        })
+        .then(res => {
+            localStorage.setItem('token', res.token);
+            window.location.href = 'http://localhost:8080/my-account';
+        })
+        .catch(err => console.log(err));
+    });
+
+
+    if(window.location.href.indexOf("my-account") != -1){
+        var token = localStorage.getItem('token');
+        console.log(token);
+        fetch('http://localhost:3000/my-account', {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        .then(res => {
+            return res.json();
+        })
+        .then(res => {
+            let prods = "";
+            let cash = '<h3>Your Cash amount: ' + res.user.cash + '</h3>';
+            if(res.products.length > 0){
+                for(let i = 0; i < res.products.length; i++){
+                    prods += '<div class="col-md-4"><div class="product-item"><div class="product-title"><a href="#">' + res.prods[i].name +'</a><div><a href="">' +
+                    res.prods[i].description + '</a></div></div><div class="product-image"><a href=""><img style="width: 300px; height: 300px;" src="' + res.prods[i].image + '" alt="Product Image"></a></div><div class="product-price"><h3><span>$</span>' + 
+                    res.prods[i].price + '</h3><a class="btn" href="/remove_item/' + res.prods[i]._id + '"><i class="fa fa-shopping-cart"></i>Remove</a></div></div></div>';
+                }
+            }
+            else{
+                prods += '<div class="product-image"><a> you ' + "don't" + ' have any products yet, please add some.</a></div><pre></pre><pre></pre><pre></pre><pre></pre><pre></pre><pre></pre><pre></pre><pre></pre><pre></pre>';
+            }
+            $('#myProducts #sec1').append(cash);
+            $('#myProducts #sec2').append(prods);
+        })
+        .catch(err => console.log(err));
+    }
     // $('#myHistory').ready( () => {
     //     fetch('http://localhost:3000/history')
     //     .then(res => {
@@ -513,7 +627,9 @@ function togglePopup(){
   document.getElementById("popup-1").classList.toggle("active");
 }
 
+function showingShop(){
 
+}
 
 // document.addEventListener('DOMContentLoaded', ()=>{ 
         

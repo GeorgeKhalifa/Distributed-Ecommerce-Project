@@ -5,7 +5,11 @@ const path = require('path');
 const router = express.Router();
 
 router.get('/shop', (req, res, next) => {
-    res.status(200).sendFile(path.join(rootDir, 'views-html', 'product-list.html'));
+    // let products = req.query.products;
+    // console.log(products);
+    // let products = localStorage.getItem('products');
+    res.sendFile(path.join(rootDir, 'views-html', 'product-list.html'));
+    
 });
 
 
